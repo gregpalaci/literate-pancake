@@ -2,6 +2,8 @@ const { setFailed, getInput, debug } = require("@actions/core");
 const { context, getOctokit } = require("@actions/github");
 const core = require("@actions/core");
 const ansiColor = require("./ansiColor");
+const lodash = require("lodash");
+const _deburr = lodash.deburr;
 
 function nameToIdentifier(name) {
   return name
