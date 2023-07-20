@@ -9881,7 +9881,7 @@ const ansiColor = __nccwpck_require__(2162);
 
   const token = getInput("github_token");
   if (!token) {
-    setFailed("Input `github_token` is required");
+    setFailed("Input `github_token` is required ");
     return;
   }
 
