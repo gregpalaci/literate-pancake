@@ -1,0 +1,51 @@
+name: 'Setup, Test and (optionally) Publish JS SDK'
+
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # push:
+  #   branches: ['master', 'main']
+  pull_request:
+    branches: ['master', 'main']
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: 'checks / publish'
+    runs-on: [self-hosted, docker-runner]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+          token: '${{ secrets.GH_DOTCOM_READ_TOKEN }}'
+          node-version-file: 'package.json'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: 'Check: Code styles'
+        run: yarn lint
+
+      - name: 'Check: Types integrity'
+        run: yarn type-check
+
+      - name: 'Check: Formatting'
+        run: yarn prettier --check .
+
+      - name: 'Check: Tests'
+        run: yarn coverage
+
+      - name: 'Check: Build'
+        run: yarn build
+
+      - name: 'Publish'
+        if: github.ref == 'refs/heads/master'
+        #shell: bash
+        run: |
+          echo 'I would publish but shouldn't trigger'
