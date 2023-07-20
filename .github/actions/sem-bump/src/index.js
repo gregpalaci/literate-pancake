@@ -4,7 +4,7 @@ const core = require("@actions/core");
 const ansiColor = require("./ansiColor");
 
 (async function main() {
-  debug("Our action is running");
+  debug("Our action is running ");
 
   const token = getInput("github_token");
   if (!token) {
