@@ -3,6 +3,25 @@ const { context, getOctokit } = require("@actions/github");
 const core = require("@actions/core");
 const ansiColor = require("./ansiColor");
 
+function nameToIdentifier(name) {
+  return name
+    .replace(/['"“‘”’]+/gu, "") // remove quotes
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-") // non alphanum to dashes
+    .replace(/-+/g, "-") // remove consecutive dashes
+    .toLowerCase();
+}
+
+function nameToEnvironmentVariableName(name) {
+  return (
+    "GITHUB_PR_LABEL_" +
+    _deburr(name) // remove accents
+      .replace(/['"“‘”’]+/gu, "") // remove quotes
+      .replace(/[^\w]+/g, "_") // non-alphanum to underscores
+      .replace(/_+/g, "_") // remove consecutive underscores
+      .toUpperCase()
+  );
+}
+
 (async function main() {
   debug("Our action is running");
 

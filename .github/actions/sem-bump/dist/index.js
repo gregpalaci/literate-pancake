@@ -9876,6 +9876,25 @@ const { context, getOctokit } = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 const ansiColor = __nccwpck_require__(2162);
 
+function nameToIdentifier(name) {
+  return name
+    .replace(/['"“‘”’]+/gu, "") // remove quotes
+    .replace(/[^\p{Letter}\p{Number}]+/gu, "-") // non alphanum to dashes
+    .replace(/-+/g, "-") // remove consecutive dashes
+    .toLowerCase();
+}
+
+function nameToEnvironmentVariableName(name) {
+  return (
+    "GITHUB_PR_LABEL_" +
+    _deburr(name) // remove accents
+      .replace(/['"“‘”’]+/gu, "") // remove quotes
+      .replace(/[^\w]+/g, "_") // non-alphanum to underscores
+      .replace(/_+/g, "_") // remove consecutive underscores
+      .toUpperCase()
+  );
+}
+
 (async function main() {
   debug("Our action is running");
 
