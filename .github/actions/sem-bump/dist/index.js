@@ -9615,6 +9615,14 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 6699:
+/***/ ((module) => {
+
+module.exports = eval("require")("./ansiColor");
+
+
+/***/ }),
+
 /***/ 2877:
 /***/ ((module) => {
 
@@ -9794,6 +9802,8 @@ var __webpack_exports__ = {};
 (() => {
 const { setFailed, getInput, debug } = __nccwpck_require__(2186);
 const { context, getOctokit } = __nccwpck_require__(5438);
+const core = __nccwpck_require__(2186);
+const ansiColor = __nccwpck_require__(6699);
 
 (async function main() {
   debug("Our action is running");
@@ -9810,32 +9820,65 @@ const { context, getOctokit } = __nccwpck_require__(5438);
   // Get info about the event.
   const { payload, eventName } = context;
 
-  debug({ context });
-
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
+  const labels = github.context.payload?.pull_request?.labels;
+  const labelsObject = {};
+
+  if (!labels) {
+    core.info("Not a pull request");
+    core.setOutput("labels", "");
+    core.setOutput("labels-object", null);
+    return;
+  }
+
+  if (labels.length == 0) {
+    core.info("No labels found");
+    core.setOutput("labels", "");
+    core.setOutput("labels-object", {});
+    return;
+  }
+
+  for (const label of labels) {
+    const identifier = nameToIdentifier(label.name);
+    const environmentVariable = nameToEnvironmentVariableName(label.name);
+
+    core.exportVariable(environmentVariable, "1");
+    core.info(
+      `\nFound label ${ansiColor.startColor(label.color)} ${
+        label.name
+      } ${ansiColor.endColor()}\n  Setting env var for remaining steps: ${environmentVariable}=1`
+    );
+    labelsObject[identifier] = true;
+  }
+
+  const labelsString = " " + Object.keys(labelsObject).join(" ") + " ";
+
+  core.info(
+    `\nAction output:\nlabels: ${JSON.stringify(
+      labelsString
+    )}\nlabels-object: ${JSON.stringify(labelsObject)}`
+  );
+  core.setOutput("labels", labelsString);
+  core.setOutput("labels-object", labelsObject);
+
   // We only want to proceed if this is a newly opened issue.
-  // if ( eventName === 'issues' && payload.action === 'opened' ) {
-  // Extra data from the event, to use in API requests.
-  // const { issue: { number }, repository: { owner, name } } = payload;
+  //   if (eventName === "issues" && payload.action === "opened") {
+  //     // Extra data from the event, to use in API requests.
+  //     const {
+  //       issue: { number },
+  //       repository: { owner, name },
+  //     } = payload;
 
-  // List of labels to add to the issue.
-  // const labels = [ 'Issue triaged' ];
+  //     // List of labels to add to the issue.
+  //     const labels = ["Issue triaged"];
 
-  // debug(
-  // 	`Add the following labels to issue #${ number }: ${ labels
-  // 		.map( ( label ) => `"${ label }"` )
-  // 		.join( ', ' ) }`
-  // );
-
-  // Finally make the API request.
-  // await octokit.rest.issues.addLabels( {
-  // 	owner: owner.login,
-  // 	repo: name,
-  // 	issue_number: number,
-  // 	labels,
-  // } );
-  //}
+  //     debug(
+  //       `Add the following labels to issue #${number}: ${labels
+  //         .map((label) => `"${label}"`)
+  //         .join(", ")}`
+  //     );
+  //   }
 })();
 
 })();
