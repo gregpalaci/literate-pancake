@@ -27105,7 +27105,6 @@ const { context, getOctokit } = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 const ansiColor = __nccwpck_require__(2162);
 const lodash = __nccwpck_require__(250);
-const _deburr = lodash.deburr;
 
 function nameToIdentifier(name) {
   return name
@@ -27118,7 +27117,8 @@ function nameToIdentifier(name) {
 function nameToEnvironmentVariableName(name) {
   return (
     "GITHUB_PR_LABEL_" +
-    _deburr(name) // remove accents
+    lodash
+      .deburr(name) // remove accents
       .replace(/['"“‘”’]+/gu, "") // remove quotes
       .replace(/[^\w]+/g, "_") // non-alphanum to underscores
       .replace(/_+/g, "_") // remove consecutive underscores

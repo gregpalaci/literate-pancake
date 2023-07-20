@@ -3,7 +3,6 @@ const { context, getOctokit } = require("@actions/github");
 const core = require("@actions/core");
 const ansiColor = require("./ansiColor");
 const lodash = require("lodash");
-const _deburr = lodash.deburr;
 
 function nameToIdentifier(name) {
   return name
@@ -16,7 +15,8 @@ function nameToIdentifier(name) {
 function nameToEnvironmentVariableName(name) {
   return (
     "GITHUB_PR_LABEL_" +
-    _deburr(name) // remove accents
+    lodash
+      .deburr(name) // remove accents
       .replace(/['"“‘”’]+/gu, "") // remove quotes
       .replace(/[^\w]+/g, "_") // non-alphanum to underscores
       .replace(/_+/g, "_") // remove consecutive underscores
