@@ -9877,7 +9877,7 @@ const core = __nccwpck_require__(2186);
 const ansiColor = __nccwpck_require__(2162);
 
 (async function main() {
-  debug("Our action is running");
+  debug("Our action is running ");
 
   const token = getInput("github_token");
   if (!token) {
@@ -9893,7 +9893,7 @@ const ansiColor = __nccwpck_require__(2162);
 
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
-  const labels = context.payload?.push?.labels;
+  const labels = context.payload?.pull_request?.labels;
   const labelsObject = {};
 
   if (!labels) {
