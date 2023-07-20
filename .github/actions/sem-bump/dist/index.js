@@ -9615,10 +9615,53 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 6699:
-/***/ ((module) => {
+/***/ 2162:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
-module.exports = eval("require")("./ansiColor");
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function parseHexColor(input) {
+  // color is in hex format, like 002200 or 3344ff
+  const m = input.match(/^([0-9a-f]{6})$/i);
+  if (m) {
+    return [
+      parseInt(m[1].substr(0, 2), 16),
+      parseInt(m[1].substr(2, 2), 16),
+      parseInt(m[1].substr(4, 2), 16),
+    ];
+  } else {
+    return null;
+  }
+}
+
+const esc = "\u001b";
+
+const ansiColor = {
+  startColor(hexColor) {
+    const color = parseHexColor(hexColor);
+    if (!color) return "";
+
+    const brightness = color.reduce((a, b) => a + b) / 3;
+    let foreground;
+    if (brightness > 175) {
+      // black
+      foreground = `${esc}[38;2;0;0;0m`;
+    } else {
+      // white
+      foreground = `${esc}[38;2;255;255;255m`;
+    }
+    const background = `${esc}[48;2;${color[0]};${color[1]};${color[2]}m`;
+    return background + foreground;
+  },
+  endColor() {
+    return `${esc}[0m`;
+  },
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ansiColor);
 
 
 /***/ }),
@@ -9792,6 +9835,34 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
@@ -9803,7 +9874,7 @@ var __webpack_exports__ = {};
 const { setFailed, getInput, debug } = __nccwpck_require__(2186);
 const { context, getOctokit } = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
-const ansiColor = __nccwpck_require__(6699);
+const ansiColor = __nccwpck_require__(2162);
 
 (async function main() {
   debug("Our action is running");
