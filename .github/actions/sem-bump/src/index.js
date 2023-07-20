@@ -1,43 +1,80 @@
-const { setFailed, getInput, debug } = require( '@actions/core' );
-const { context, getOctokit } = require( '@actions/github' );
+const { setFailed, getInput, debug } = require("@actions/core");
+const { context, getOctokit } = require("@actions/github");
+const core = require("@actions/core");
+const ansiColor = require("./ansiColor");
 
-( async function main() {
-	debug( 'Our action is running' );
+(async function main() {
+  debug("Our action is running");
 
-	const token = getInput( 'github_token' );
-	if ( ! token ) {
-		setFailed( 'Input `github_token` is required' );
-		return;
-	}
+  const token = getInput("github_token");
+  if (!token) {
+    setFailed("Input `github_token` is required");
+    return;
+  }
 
-	// Get the Octokit client.
-	const octokit = new getOctokit( token );
+  // Get the Octokit client.
+  const octokit = new getOctokit(token);
 
-	// Get info about the event.
-	const { payload, eventName } = context;
+  // Get info about the event.
+  const { payload, eventName } = context;
 
-	debug( `Received event = '${ eventName }', action = '${ payload.action }'` );
+  debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
-	// We only want to proceed if this is a newly opened issue.
-	if ( eventName === 'issues' && payload.action === 'opened' ) {
-		// Extra data from the event, to use in API requests.
-		const { issue: { number }, repository: { owner, name } } = payload;
+  const labels = github.context.payload?.pull_request?.labels;
+  const labelsObject = {};
 
-		// List of labels to add to the issue.
-		const labels = [ 'Issue triaged' ];
+  if (!labels) {
+    core.info("Not a pull request");
+    core.setOutput("labels", "");
+    core.setOutput("labels-object", null);
+    return;
+  }
 
-		debug(
-			`Add the following labels to issue #${ number }: ${ labels
-				.map( ( label ) => `"${ label }"` )
-				.join( ', ' ) }`
-		);
+  if (labels.length == 0) {
+    core.info("No labels found");
+    core.setOutput("labels", "");
+    core.setOutput("labels-object", {});
+    return;
+  }
 
-		// Finally make the API request.
-		await octokit.rest.issues.addLabels( {
-			owner: owner.login,
-			repo: name,
-			issue_number: number,
-			labels,
-		} );
-	}
-} )();
+  for (const label of labels) {
+    const identifier = nameToIdentifier(label.name);
+    const environmentVariable = nameToEnvironmentVariableName(label.name);
+
+    core.exportVariable(environmentVariable, "1");
+    core.info(
+      `\nFound label ${ansiColor.startColor(label.color)} ${
+        label.name
+      } ${ansiColor.endColor()}\n  Setting env var for remaining steps: ${environmentVariable}=1`
+    );
+    labelsObject[identifier] = true;
+  }
+
+  const labelsString = " " + Object.keys(labelsObject).join(" ") + " ";
+
+  core.info(
+    `\nAction output:\nlabels: ${JSON.stringify(
+      labelsString
+    )}\nlabels-object: ${JSON.stringify(labelsObject)}`
+  );
+  core.setOutput("labels", labelsString);
+  core.setOutput("labels-object", labelsObject);
+
+  // We only want to proceed if this is a newly opened issue.
+  //   if (eventName === "issues" && payload.action === "opened") {
+  //     // Extra data from the event, to use in API requests.
+  //     const {
+  //       issue: { number },
+  //       repository: { owner, name },
+  //     } = payload;
+
+  //     // List of labels to add to the issue.
+  //     const labels = ["Issue triaged"];
+
+  //     debug(
+  //       `Add the following labels to issue #${number}: ${labels
+  //         .map((label) => `"${label}"`)
+  //         .join(", ")}`
+  //     );
+  //   }
+})();
