@@ -20,7 +20,7 @@ const ansiColor = require("./ansiColor");
 
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
-  const labels = github.context.payload?.pull_request?.labels;
+  const labels = context.payload?.pull_request?.labels;
   const labelsObject = {};
 
   if (!labels) {
