@@ -6,7 +6,7 @@ on:
 
 jobs:
   bump-version:
-    name: "Bump Version on master"
+    name: "Bump Version on master "
     runs-on: ubuntu-latest
 
     steps:
