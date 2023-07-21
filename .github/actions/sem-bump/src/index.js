@@ -8,6 +8,8 @@ const { existsSync } = require("fs");
 const { EOL } = require("os");
 const path = require("path");
 
+const workspace = process.env.GITHUB_WORKSPACE;
+
 function getPackageJson() {
   const pathToPackage = path.join(workspace, "package.json");
   if (!existsSync(pathToPackage))

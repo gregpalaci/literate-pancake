@@ -27118,6 +27118,8 @@ const { existsSync } = __nccwpck_require__(7147);
 const { EOL } = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
 
+const workspace = process.env.GITHUB_WORKSPACE;
+
 function getPackageJson() {
   const pathToPackage = path.join(workspace, "package.json");
   if (!existsSync(pathToPackage))
