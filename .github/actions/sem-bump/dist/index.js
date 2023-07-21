@@ -27120,6 +27120,8 @@ const path = __nccwpck_require__(1017);
 
 const workspace = process.env.GITHUB_WORKSPACE;
 
+const pkg = getPackageJson();
+
 function getPackageJson() {
   const pathToPackage = path.join(workspace, "package.json");
   if (!existsSync(pathToPackage))
@@ -27207,24 +27209,19 @@ function nameToEnvironmentVariableName(name) {
   await runInWorkspace("git", [
     "config",
     "user.name",
+    `"${process.env.GITHUB_USER || "Automated Version Bump"}"`,
+  ]).catch((e) => console.log(e));
+
+  await runInWorkspace("git", [
+    "config",
+    "user.email",
     `"${
-      process.env.GITHUB_USER ||
       process.env.GITHUB_EMAIL ||
-      "Automated Version Bump"
+      "gh-action-bump-version@users.noreply.github.com"
     }"`,
   ]).catch((e) => console.log(e));
-  //   await runInWorkspace("git", [
-  //     "config",
-  //     "user.email",
-  //     `"${
-  //       process.env.GITHUB_EMAIL ||
-  //       "gh-action-bump-version@users.noreply.github.com"
-  //     }"`,
-  //   ])
 
-  await runInWorkspace("npm", ["version", "major"]).catch((e) =>
-    console.log(e)
-  );
+  await execSync("npm", ["version major"]).catch((e) => console.log(e));
 
   await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
     (e) => console.log(e)
