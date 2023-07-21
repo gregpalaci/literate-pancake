@@ -27207,24 +27207,32 @@ function nameToEnvironmentVariableName(name) {
   await runInWorkspace("git", [
     "config",
     "user.name",
-    `"${process.env.GITHUB_USER || "Automated Version Bump"}"`,
-  ]);
-  await runInWorkspace("git", [
-    "config",
-    "user.email",
     `"${
+      process.env.GITHUB_USER ||
       process.env.GITHUB_EMAIL ||
-      "gh-action-bump-version@users.noreply.github.com"
+      "Automated Version Bump"
     }"`,
-  ]);
+  ]).catch((e) => console.log(e));
+  //   await runInWorkspace("git", [
+  //     "config",
+  //     "user.email",
+  //     `"${
+  //       process.env.GITHUB_EMAIL ||
+  //       "gh-action-bump-version@users.noreply.github.com"
+  //     }"`,
+  //   ])
 
-  await runInWorkspace("npm", ["version", "major"]);
+  await runInWorkspace("npm", ["version", "major"]).catch((e) =>
+    console.log(e)
+  );
 
-  await runInWorkspace("git", ["commit", "-a", "-m", "version update"]);
+  await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
+    (e) => console.log(e)
+  );
 
-  await runInWorkspace("git", ["fetch"]);
+  await runInWorkspace("git", ["fetch"]).catch((e) => console.log(e));
 
-  await runInWorkspace("git", ["push"]);
+  await runInWorkspace("git", ["push"]).catch((e) => console.log(e));
 
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
