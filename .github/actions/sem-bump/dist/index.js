@@ -27221,7 +27221,7 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
-  await execSync("npm", ["version major"]).catch((e) => console.log(e));
+  await runInWorkspace("npm", ["version major"]).catch((e) => console.log(e));
 
   await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
     (e) => console.log(e)
