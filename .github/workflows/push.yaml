@@ -21,6 +21,8 @@ jobs:
         run: npm pkg get version
       - name: "version bump"
         run: npm version major
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       #  log
       # logic check if pakcage.json version == self, reject on PR
       #
