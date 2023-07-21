@@ -26899,6 +26899,14 @@ module.exports = require("assert");
 
 /***/ }),
 
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
+
+/***/ }),
+
 /***/ 6113:
 /***/ ((module) => {
 
@@ -27105,6 +27113,10 @@ const { context, getOctokit } = __nccwpck_require__(5438);
 const core = __nccwpck_require__(2186);
 const ansiColor = __nccwpck_require__(2162);
 const lodash = __nccwpck_require__(250);
+const { execSync, spawn } = __nccwpck_require__(2081);
+const { existsSync } = __nccwpck_require__(7147);
+const { EOL } = __nccwpck_require__(2037);
+const path = __nccwpck_require__(1017);
 
 function getPackageJson() {
   const pathToPackage = path.join(workspace, "package.json");

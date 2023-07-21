@@ -3,6 +3,10 @@ const { context, getOctokit } = require("@actions/github");
 const core = require("@actions/core");
 const ansiColor = require("./ansiColor");
 const lodash = require("lodash");
+const { execSync, spawn } = require("child_process");
+const { existsSync } = require("fs");
+const { EOL } = require("os");
+const path = require("path");
 
 function getPackageJson() {
   const pathToPackage = path.join(workspace, "package.json");
