@@ -27221,7 +27221,14 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
-  await runInWorkspace("npm", ["version major"]).catch((e) => console.log(e));
+  const current = pkg.version.toString();
+
+  await runInWorkspace("npm", [
+    "version",
+    "--allow-same-version=true",
+    "--git-tag-version=false",
+    current,
+  ]).catch((e) => console.log(e));
 
   await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
     (e) => console.log(e)
