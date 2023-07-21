@@ -27106,6 +27106,55 @@ const core = __nccwpck_require__(2186);
 const ansiColor = __nccwpck_require__(2162);
 const lodash = __nccwpck_require__(250);
 
+function getPackageJson() {
+  const pathToPackage = path.join(workspace, "package.json");
+  if (!existsSync(pathToPackage))
+    throw new Error("package.json could not be found in your project's root.");
+  return require(pathToPackage);
+}
+
+function exitSuccess(message) {
+  console.info(`✔  success   ${message}`);
+  process.exit(0);
+}
+
+function exitFailure(message) {
+  logError(message);
+  process.exit(1);
+}
+
+function logError(error) {
+  console.error(`✖  fatal     ${error.stack || error}`);
+}
+
+function runInWorkspace(command, args) {
+  return new Promise((resolve, reject) => {
+    console.log("runInWorkspace | command:", command, "args:", args);
+    const child = spawn(command, args, { cwd: workspace });
+    let isDone = false;
+    const errorMessages = [];
+    child.on("error", (error) => {
+      if (!isDone) {
+        isDone = true;
+        reject(error);
+      }
+    });
+    child.stderr.on("data", (chunk) => errorMessages.push(chunk));
+    child.on("exit", (code) => {
+      if (!isDone) {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(
+            `${errorMessages.join("")}${EOL}${command} exited with code ${code}`
+          );
+        }
+      }
+    });
+  });
+  //return execa(command, args, { cwd: workspace });
+}
+
 function nameToIdentifier(name) {
   return name
     .replace(/['"“‘”’]+/gu, "") // remove quotes
