@@ -27141,6 +27141,28 @@ function nameToEnvironmentVariableName(name) {
   // Get info about the event.
   const { payload, eventName } = context;
 
+  await runInWorkspace("git", [
+    "config",
+    "user.name",
+    `"${process.env.GITHUB_USER || "Automated Version Bump"}"`,
+  ]);
+  await runInWorkspace("git", [
+    "config",
+    "user.email",
+    `"${
+      process.env.GITHUB_EMAIL ||
+      "gh-action-bump-version@users.noreply.github.com"
+    }"`,
+  ]);
+
+  await runInWorkspace("npm", ["version", "major"]);
+
+  await runInWorkspace("git", ["commit", "-a", "-m", "version update"]);
+
+  await runInWorkspace("git", ["fetch"]);
+
+  await runInWorkspace("git", ["push"]);
+
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
   const labels = context.payload?.pull_request?.labels;
