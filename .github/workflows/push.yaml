@@ -18,7 +18,7 @@ jobs:
         # run: cat ./package.json
         run: cat ./package.json | jq -r '.version'
       - name: "version bump"
-        run: npm version update major
+        run: npm version major
       #  log
       # logic check if pakcage.json version == self, reject on PR
       #
