@@ -27221,7 +27221,7 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
-  await runInWorkspace("git", ["checkout", process.env.GITHUB_HEAD_REF]);
+  await runInWorkspace("git", ["checkout", "-b", process.env.GITHUB_HEAD_REF]);
 
   const current = pkg.version.toString();
 
