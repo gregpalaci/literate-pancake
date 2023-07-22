@@ -27221,7 +27221,11 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
+  await runInWorkspace("git", ["checkout", process.env.GITHUB_HEAD_REF]);
+
   const current = pkg.version.toString();
+
+  const remoteRepo = `https://${process.env.GITHUB_ACTOR}:${process.env.GITHUB_TOKEN}@github.com/${process.env.GITHUB_REPOSITORY}.git`;
 
   await runInWorkspace("npm", [
     "version",
@@ -27230,15 +27234,15 @@ function nameToEnvironmentVariableName(name) {
     current,
   ]).catch((e) => console.log(e));
 
-  await runInWorkspace("git", ["checkout", process.env.GITHUB_HEAD_REF]);
-
-  await runInWorkspace("git", ["fetch"]).catch((e) => console.log(e));
+  // await runInWorkspace("git", ["fetch"]).catch((e) => console.log(e));
 
   await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
     (e) => console.log(e)
   );
 
-  await runInWorkspace("git", ["push"]).catch((e) => console.log(e));
+  await runInWorkspace("git", ["push", remoteRepo]).catch((e) =>
+    console.log(e)
+  );
 
   debug(`Received event = '${eventName}', action = '${payload.action}'`);
 
