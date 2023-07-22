@@ -124,7 +124,7 @@ function nameToEnvironmentVariableName(name) {
     current,
   ]).catch((e) => console.log(e));
 
-  // await runInWorkspace("git", ["fetch"]).catch((e) => console.log(e));
+  await runInWorkspace("git", ["fetch"]).catch((e) => console.log(e));
 
   await runInWorkspace("git", ["commit", "-a", "-m", "version update"]).catch(
     (e) => console.log(e)
