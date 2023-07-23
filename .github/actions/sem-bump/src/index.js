@@ -136,7 +136,7 @@ function nameToEnvironmentVariableName(name) {
     (e) => console.log(e)
   );
 
-  await runInWorkspace("git", ["push", remoteRepo, "--tags"]).catch((e) =>
+  await runInWorkspace("git", ["push", remoteRepo, "--tags", "-f"]).catch((e) =>
     console.log(e)
   );
 
