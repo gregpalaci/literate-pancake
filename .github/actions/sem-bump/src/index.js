@@ -86,7 +86,7 @@ function nameToEnvironmentVariableName(name) {
 
   const token = getInput("github_token");
   if (!token) {
-    setFailed("Input `github_token` is required ");
+    setFailed("Input `github_token`  is required ");
     return;
   }
 
@@ -136,7 +136,7 @@ function nameToEnvironmentVariableName(name) {
     (e) => console.log(e)
   );
 
-  await runInWorkspace("git", ["push", remoteRepo, "--tags"]).catch((e) =>
+  await runInWorkspace("git", ["push", remoteRepo, "--tags", "-f"]).catch((e) =>
     console.log(e)
   );
 
