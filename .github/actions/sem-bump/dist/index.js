@@ -27196,7 +27196,7 @@ function nameToEnvironmentVariableName(name) {
 
   const token = getInput("github_token");
   if (!token) {
-    setFailed("Input `github_token` is required ");
+    setFailed("Input `github_token`  is required ");
     return;
   }
 
@@ -27221,7 +27221,13 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
-  await runInWorkspace("git", ["checkout", "-b", process.env.GITHUB_HEAD_REF]);
+  await runInWorkspace("git", [
+    "checkout",
+    "-b",
+    process.env.GITHUB_HEAD_REF,
+  ]).catch((e) => console.log(e));
+
+  await runInWorkspace("git", ["pull"]).catch((e) => console.log(e));
 
   const current = pkg.version.toString();
 
@@ -27240,7 +27246,7 @@ function nameToEnvironmentVariableName(name) {
     (e) => console.log(e)
   );
 
-  await runInWorkspace("git", ["push", remoteRepo]).catch((e) =>
+  await runInWorkspace("git", ["push", remoteRepo, "--tags", "-f"]).catch((e) =>
     console.log(e)
   );
 
