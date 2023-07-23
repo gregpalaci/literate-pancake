@@ -111,7 +111,13 @@ function nameToEnvironmentVariableName(name) {
     }"`,
   ]).catch((e) => console.log(e));
 
-  await runInWorkspace("git", ["checkout", "-b", process.env.GITHUB_HEAD_REF]);
+  await runInWorkspace("git", [
+    "checkout",
+    "-b",
+    process.env.GITHUB_HEAD_REF,
+  ]).catch((e) => console.log(e));
+
+  await runInWorkspace("git", ["pull"]).catch((e) => console.log(e));
 
   const current = pkg.version.toString();
 
@@ -130,7 +136,7 @@ function nameToEnvironmentVariableName(name) {
     (e) => console.log(e)
   );
 
-  await runInWorkspace("git", ["push", remoteRepo]).catch((e) =>
+  await runInWorkspace("git", ["push", remoteRepo, "--tags"]).catch((e) =>
     console.log(e)
   );
 
