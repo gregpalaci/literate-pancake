@@ -86,7 +86,7 @@ function nameToEnvironmentVariableName(name) {
 
   const token = getInput("github_token");
   if (!token) {
-    setFailed("Input `github_token` is required ");
+    setFailed("Input `github_token`  is required ");
     return;
   }
 
