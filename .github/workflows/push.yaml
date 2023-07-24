@@ -18,16 +18,7 @@ jobs:
         uses: actions/setup-node@v3
       - name: "cat package.json"
         run: npm pkg get version
-      # - name: "version bump"
-      #   run: npm version major
-      #   env:
-      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      #  log
-      # logic check if pakcage.json version == self, reject on PR
-      #
-      # logic on push check for git branch tag apply bum p commit
-      #
       - name: "Automated Version Bump"
         id: version-bump
         uses: "./.github/actions/sem-bump"
