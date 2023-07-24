@@ -8,6 +8,8 @@ const { existsSync } = require("fs");
 const { EOL } = require("os");
 const path = require("path");
 
+console.log("process.env.GITHUB_WORKSPACE", process.env.GITHUB_WORKSPACE);
+
 const workspace = process.env.GITHUB_WORKSPACE;
 
 const pkg = getPackageJson();
@@ -67,6 +69,17 @@ function nameToIdentifier(name) {
     .replace(/[^\p{Letter}\p{Number}]+/gu, "-") // non alphanum to dashes
     .replace(/-+/g, "-") // remove consecutive dashes
     .toLowerCase();
+}
+
+function parseInputTags(inputText) {
+  const removeNewLine = inputText.split("\n").join(",");
+  const splitByComma = removeNewLine.split(",");
+
+  const trimmed = splitByComma.map((tag) => tag.trim());
+
+  const notEmpty = trimmed.filter((tag) => tag !== "");
+
+  return notEmpty;
 }
 
 function nameToEnvironmentVariableName(name) {
