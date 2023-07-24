@@ -368,7 +368,7 @@ function exitFailure(message) {
 }
 
 function logError(error) {
-  console.error(`✖  fatal     ${error.stack || error}`);
+  console.error(`✖ fatal     ${error.stack || error}`);
 }
 
 function runInWorkspace(command, args) {
