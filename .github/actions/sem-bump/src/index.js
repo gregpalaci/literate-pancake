@@ -8,6 +8,8 @@ const { existsSync } = require("fs");
 const { EOL } = require("os");
 const path = require("path");
 
+console.log("process.env.GITHUB_WORKSPACE", process.env.GITHUB_WORKSPACE);
+
 const workspace = process.env.GITHUB_WORKSPACE;
 
 const pkg = getPackageJson();

@@ -1,5 +1,5 @@
-name: "Issue Triage"
-description: "Automatically add labels on newly opened issues"
+name: "Semantic Version Bumper for npm"
+description: "coming soon..."
 inputs:
   github_token:
     description: "GitHub access token"
@@ -7,4 +7,4 @@ inputs:
     default: ${{ github.token }}
 runs:
   using: node16
-  main: "dist/index.js" 
+  main: "src/index.js" 
