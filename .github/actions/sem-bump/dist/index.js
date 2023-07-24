@@ -27118,6 +27118,8 @@ const { existsSync } = __nccwpck_require__(7147);
 const { EOL } = __nccwpck_require__(2037);
 const path = __nccwpck_require__(1017);
 
+console.log("process.env.GITHUB_WORKSPACE", process.env.GITHUB_WORKSPACE);
+
 const workspace = process.env.GITHUB_WORKSPACE;
 
 const pkg = getPackageJson();
@@ -27177,6 +27179,17 @@ function nameToIdentifier(name) {
     .replace(/[^\p{Letter}\p{Number}]+/gu, "-") // non alphanum to dashes
     .replace(/-+/g, "-") // remove consecutive dashes
     .toLowerCase();
+}
+
+function parseInputTags(inputText) {
+  const removeNewLine = inputText.split("\n").join(",");
+  const splitByComma = removeNewLine.split(",");
+
+  const trimmed = splitByComma.map((tag) => tag.trim());
+
+  const notEmpty = trimmed.filter((tag) => tag !== "");
+
+  return notEmpty;
 }
 
 function nameToEnvironmentVariableName(name) {
